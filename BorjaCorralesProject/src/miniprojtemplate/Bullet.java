@@ -7,14 +7,24 @@ public class Bullet extends Sprite {
 	public final static int BULLET_WIDTH = 100;
 	public final static int BULLET_HEIGHT = 30;
 	private final int BULLET_SPEED = 20;
+	public double angle;
 
-	public Bullet(int x, int y){
+	public Bullet(int x, int y, double angle){
 		super(x,y);
 		this.loadImage(Bullet.BULLET_IMAGE);
+		this.angle = angle;
 	}
 
-	public void move(){ //method that will move/change the x position of the bullet
-		this.x += this.BULLET_SPEED; //Change the x position of the bullet depending on the bullet speed.
-		if(this.x >= (GameStage.WINDOW_WIDTH-25)) this.setVisible(false);//If the x position has reached the right boundary of the screen, set the bullet's visibility to false.
+	public void move(double angle) {
+	    double dx = BULLET_SPEED * Math.cos(angle);
+	    double dy = BULLET_SPEED * Math.sin(angle);
+	    this.x += dx;
+	    this.y += dy;
+	    if (this.x >= GameStage.WINDOW_WIDTH - 25) {
+	        this.setVisible(false);
+	    }
+	    if (this.y >= GameStage.WINDOW_HEIGHT - 25) {
+	        this.setVisible(false);
+	    }
 	}
 }

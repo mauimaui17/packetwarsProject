@@ -14,30 +14,46 @@ public class Fish extends Sprite {
 	protected int speed;
 
 	Fish(int x, int y){
-		super(x,y);
+		super(0,0);
 		this.loadImage(Fish.FISH_IMAGE);
 		this.alive = true;
-		Random r = new Random();
-		this.speed = 2; //Randomize speed of fish
-		//why 6? for some reason nextInt(int origin, int bound) isnt working
-		//but nextInt(int bound) returns 0 to bound (Exclusive) so it
-		//returns 0 to 5 for this section.
-		//add+1 so it turns 1 to 6.
-		this.moveRight = r.nextBoolean(); //and moveRight's initial value
+		this.speed = 3;
+        // randomly generate starting position at one of the four edges of the screen
+        int side = (int) (Math.random() * 4);
+        switch (side) {
+            case 0: // top
+                this.x = (int) (Math.random() * GameStage.WINDOW_WIDTH);
+                this.y = -100;
+                break;
+            case 1: // right
+                this.x = GameStage.WINDOW_WIDTH + 100;
+                this.y = (int) (Math.random() * GameStage.WINDOW_HEIGHT);
+                break;
+            case 2: // bottom
+                this.x = (int) (Math.random() * GameStage.WINDOW_WIDTH);
+                this.y = GameStage.WINDOW_HEIGHT + 100;
+                break;
+            case 3: // left
+                this.x = -100;
+                this.y = (int) (Math.random() * GameStage.WINDOW_HEIGHT);
+                break;
+        }
+        double dx = GameTimer.playerX - this.x;
+        double dy = GameTimer.playerY - this.y;
+        double angle = Math.atan2(dy, dx);
+        this.dx = (int) (this.speed * Math.cos(angle));
+        this.dy = (int) (this.speed * Math.sin(angle));
+        // calculate velocity vector towards player's position
 	}
 
 	void move(){ //method that changes the x position of the fish
-		if(this.moveRight == true && this.x < GameStage.WINDOW_WIDTH - this.getSize()) { //If moveRight is true and if the fish hasn't reached the right boundary yet,
-			this.x += this.speed; //move the fish to the right by changing the x position of the fish depending on its speed
-		} else if (this.moveRight == true && this.x >= (GameStage.WINDOW_WIDTH - (this.getSize()+100))) { //else if it has reached the boundary, change the moveRight value / move to the left
-			this.moveRight = false;
-			this.x -= this.speed;
-		} else if (this.moveRight == false && this.x > 0) { //Else, if moveRight is false and if the fish hasn't reached the left boundary yet,
-			this.x -= this.speed; //move the fish to the left by changing the x position of the fish depending on its speed.
-		} else if(this.moveRight == false && this.x <= 0) { //else if it has reached the boundary, change the moveRight value / move to the right
-			this.moveRight = true;
-			this.x += this.speed;
-		}
+        double dx = GameTimer.playerX - this.x;
+        double dy = GameTimer.playerY - this.y;
+        double angle = Math.atan2(dy, dx);
+        this.dx = (int) (this.speed * Math.cos(angle));
+        this.dy = (int) (this.speed * Math.sin(angle));
+        this.x += this.dx;
+        this.y += this.dy;
 	}
 
 	//GETTER

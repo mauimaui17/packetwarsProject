@@ -28,9 +28,17 @@ public class Sprite {
 	//method to set the image to the image view node
 	void render(GraphicsContext gc){
 		gc.drawImage(this.img, this.x, this.y);
-
     }
+	void render(GraphicsContext gc, double angle){
+	    double centerX = this.x + this.width / 2;
+	    double centerY = this.y + this.height / 2;
 
+	    gc.save(); // Save the current state of the GC
+	    gc.translate(centerX, centerY); // Translate to the center of the sprite
+	    gc.rotate(Math.toDegrees(angle)); // Rotate around the center
+	    gc.drawImage(this.img, -this.width / 2, -this.height / 2, this.width, this.height); // Draw the rotated image
+	    gc.restore(); // Restore the GC to its original state
+    }
 	//method to set the object's width and height properties
 	private void setSize(){
 		this.width = this.img.getWidth();

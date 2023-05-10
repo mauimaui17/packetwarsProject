@@ -53,14 +53,12 @@ public class Ship extends Sprite{
 	}
 
 	//method called if spacebar is pressed
-	public void shoot(){
+	public void shoot(int x, int y, double angle){
 		//compute for the x and y initial position of the bullet
-		int x = (int) (this.x + this.width/2);
-		int y = (int) (this.y + this.height/4);
 		/*
 		 * TODO: Instantiate a new bullet and add it to the bullets arraylist of ship
 		 */
-		this.bullets.add(new Bullet(x,y));
+		this.bullets.add(new Bullet(x,y,angle));
     }
 
 	//method called if up/down/left/right arrow key is pressed.

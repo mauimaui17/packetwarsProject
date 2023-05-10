@@ -12,6 +12,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
@@ -48,12 +49,12 @@ public class GameTimer extends AnimationTimer{
 	private long powerTime;
 	private int winner;
 	private boolean boss_kill;
-
-
+	public final static int playerX = GameStage.WINDOW_WIDTH/2;
+	public final static int playerY = GameStage.WINDOW_HEIGHT/2;
 	GameTimer(GraphicsContext gc, Scene theScene){
 		this.gc = gc;
 		this.theScene = theScene;
-		this.myShip = new Ship("Going merry",GameStage.WINDOW_WIDTH/2,GameStage.WINDOW_HEIGHT/2);
+		this.myShip = new Ship("Going merry",playerX, playerY);
 		//instantiate the ArrayList of Fish
 		this.fishes = new ArrayList<Fish>();
 		this.boss = new ArrayList<Boss>();
@@ -136,8 +137,16 @@ public class GameTimer extends AnimationTimer{
 		 *TODO: Loop through the bullets arraylist of myShip
 		 *				and render each bullet to the canvas
 		 */
-		for(Bullet bullets:this.myShip.getBullets()) {
-			bullets.render(this.gc);
+		//create a local arraylist of Bullets for the bullets 'shot' by the ship
+		ArrayList<Bullet> bList = this.myShip.getBullets();
+
+		//Loop through the bullet list and check whether a bullet is still visible.
+		for(int i = 0; i < bList.size(); i++){
+			Bullet b = bList.get(i);
+			/*
+			 * TODO:  If a bullet is visible, move the bullet, else, remove the bullet from the bullet array list.
+			 */
+			b.render(gc,b.angle);
 		}
 	}
 
@@ -146,7 +155,7 @@ public class GameTimer extends AnimationTimer{
 		this.spawnTime = TimeUnit.NANOSECONDS.toSeconds(System.nanoTime());
 		for(int i=0;i<fishCount;i++){
 			int x = 0;
-			int y = 300;
+			int y = 0;
 			/*
 			 *TODO: Add a new object Fish to the fishes arraylist
 			 */
@@ -168,7 +177,7 @@ public class GameTimer extends AnimationTimer{
 			if(b.getVisible() == false) {
 				bList.remove(i);
 			} else {
-				b.move();
+				b.move(b.angle);
 			}
 		}
 	}
@@ -198,6 +207,17 @@ public class GameTimer extends AnimationTimer{
                 moveMyShip(code);
 			}
 		});
+		this.theScene.setOnMouseClicked(new EventHandler<MouseEvent>() {
+			public void handle(MouseEvent e) {
+				double mouseX = e.getX();
+				double mouseY = e.getY();
+				double dx = mouseX - GameTimer.playerX;
+				double dy = mouseY - GameTimer.playerY;
+				double angle = Math.atan2(dy, dx);
+				
+				shoot(angle);
+			}
+		});
 		this.theScene.setOnKeyReleased(new EventHandler<KeyEvent>(){
 		            public void handle(KeyEvent e){
 		            	KeyCode code = e.getCode();
@@ -205,7 +225,10 @@ public class GameTimer extends AnimationTimer{
 		            }
 		        });
     }
-
+	private void shoot(double angle) {
+		System.out.println("Angle: "+angle);
+		this.myShip.shoot(GameTimer.playerX, GameTimer.playerY, angle);
+	}
 	//method that will move the ship depending on the key pressed
 	private void moveMyShip(KeyCode ke) {
 		if(ke==KeyCode.UP || ke==KeyCode.W) this.myShip.setDY(-10);
@@ -215,16 +238,7 @@ public class GameTimer extends AnimationTimer{
 		if(ke==KeyCode.DOWN|| ke==KeyCode.S) this.myShip.setDY(10);
 
 		if(ke==KeyCode.RIGHT|| ke==KeyCode.D) this.myShip.setDX(10);
-
-		if(ke==KeyCode.SPACE) {
-			if(System.nanoTime() - this.lastShot >= Ship.FIRE_RATE) {
-				this.myShip.shoot();
-				this.lastShot = System.nanoTime();
-			}
-    }
-		System.out.println(ke+" key pressed.");
   }
-
 	//method that will stop the ship's movement; set the ship's DX and DY to 0
 	private void stopMyShip(KeyCode ke){
 		this.myShip.setDX(0);
@@ -237,7 +251,7 @@ public class GameTimer extends AnimationTimer{
 			if(this.myShip.collidesWith(f) && this.myShip.generalImmunity() == false) {
 				//fish dies, myship gets damaged.
 				this.myShip.getDamaged(Fish.FISH_STRENGTH);
-				this.immunityTime = TimeUnit.NANOSECONDS.toSeconds(System.nanoTime());
+				//this.immunityTime = TimeUnit.NANOSECONDS.toSeconds(System.nanoTime());
 				f.die();
 			}
 
