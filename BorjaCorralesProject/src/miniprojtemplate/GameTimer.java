@@ -127,7 +127,7 @@ public class GameTimer extends AnimationTimer{
 	//method that will render/draw the fishes to the canvas
 	private void renderFishes() {
 		for (Fish f : this.fishes){
-			f.render(this.gc);
+			f.render(this.gc, f.angle);
 		}
 	}
 

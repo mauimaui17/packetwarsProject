@@ -6,18 +6,21 @@ import java.util.Random;
 public class Fish extends Sprite {
 	public final static Image FISH_IMAGE = new Image("images/enemy.png",Fish.FISH_WIDTH,Fish.FISH_WIDTH,false,false);
 	public final static int FISH_POINT_VAL = 1;
-	public final static int FISH_STRENGTH = 30;
-	public final static int FISH_WIDTH=50;
+	public final static int FISH_STRENGTH = 10;
+	public final static int FISH_WIDTH=20;
 	public final static int MAX_FISH_SPEED = 5;
 	protected boolean alive;
 	protected boolean moveRight; //attribute that will determine if a fish will initially move to the right
 	protected int speed;
+	private int health;
+	protected double angle;
 
 	Fish(int x, int y){
 		super(0,0);
 		this.loadImage(Fish.FISH_IMAGE);
 		this.alive = true;
 		this.speed = 2;
+		this.health = 50;
         // randomly generate starting position at one of the four edges of the screen
         int side = (int) (Math.random() * 4);
         switch (side) {
@@ -40,9 +43,9 @@ public class Fish extends Sprite {
         }
         double dx = GameTimer.playerX - this.x;
         double dy = GameTimer.playerY - this.y;
-        double angle = Math.atan2(dy, dx);
-        this.dx = (int) (this.speed * Math.cos(angle));
-        this.dy = (int) (this.speed * Math.sin(angle));
+        this.angle = Math.atan2(dy, dx);
+        this.dx = (int) (this.speed * Math.cos(this.angle));
+        this.dy = (int) (this.speed * Math.sin(this.angle));
         // calculate velocity vector towards player's position
 	}
 
@@ -66,5 +69,11 @@ public class Fish extends Sprite {
 	//SETTER
 	public boolean die() {
 		return this.alive = false;
+	}
+	public void damaged(int damage) {
+		this.health -= damage;
+		if (this.health <= 0){
+			this.die();
+		}
 	}
 }
