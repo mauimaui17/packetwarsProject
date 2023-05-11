@@ -99,7 +99,7 @@ public class GameTimer extends AnimationTimer{
 			this.setGameOver(0);
 			this.gameOver();
 		}
-		if((seconds - TimeUnit.NANOSECONDS.toSeconds(this.startTime) == 60)&&
+		if((seconds - TimeUnit.NANOSECONDS.toSeconds(this.startTime) == 120)&&
 				this.myShip.isAlive()) {
 			this.setGameOver(1);
 			this.gameOver();

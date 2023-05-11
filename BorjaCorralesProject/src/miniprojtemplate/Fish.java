@@ -17,7 +17,7 @@ public class Fish extends Sprite {
 		super(0,0);
 		this.loadImage(Fish.FISH_IMAGE);
 		this.alive = true;
-		this.speed = 3;
+		this.speed = 2;
         // randomly generate starting position at one of the four edges of the screen
         int side = (int) (Math.random() * 4);
         switch (side) {

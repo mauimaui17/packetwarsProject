@@ -90,7 +90,7 @@ public class Ship extends Sprite{
 	public void getDamaged(int damage) {
 		if(this.strength > 0) {
 			this.strength -= damage;
-			this.mercyImmunity = true;
+			//this.mercyImmunity = true;
 		}
 		if(this.strength <= 0) {
 			this.die();
