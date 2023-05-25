@@ -2,20 +2,29 @@ package miniprojtemplate;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+
 public class GameStage {
 	public static final int WINDOW_HEIGHT = 900;
 	public static final int WINDOW_WIDTH = 1740;
+	
+	public static final Button repairShip = new Button("Repair");
+	public static final Button addMaxHealth =  new Button("Upgrade Max Health");
+	public static final Button addMaxDamage = new Button("Upgrade Max Damage");
 	private Scene scene;
 	private static Stage stage;
 	private VBox root;
@@ -46,16 +55,37 @@ public class GameStage {
 		this.root.getChildren().add(this.canvas);
 		this.root.getChildren().add(this.overlay);
 		GameStage.stage.setTitle("Packet Wars");
+		
+		repairShip.setTranslateX(100);
+		repairShip.setTranslateY(800);
+		repairShip.setPrefSize(200, 200);
+		
+		addMaxHealth.setTranslateX(400);
+		addMaxHealth.setTranslateY(773);
+		addMaxHealth.setPrefSize(200, 200);
+		
+		addMaxDamage.setTranslateX(700);
+		addMaxDamage.setTranslateY(748);
+		addMaxDamage.setPrefSize(200, 200);
+		
+		this.root.getChildren().add(repairShip);
+		this.root.getChildren().add(addMaxHealth);
+		this.root.getChildren().add(addMaxDamage);
+		
+		//set stage elements here
+		this.root.getChildren().add(canvas);
+
+		GameStage.stage.setTitle("Mini Ship Shooting Game");
 		GameStage.stage.setScene(this.scene);
 		//invoke the start method of the animation timer
 		this.gametimer.start();
 
 		GameStage.stage.show();
 	}
+	
 	public static Stage getStage() {
 		
 		return GameStage.stage;
 	}
-
-
+	
 }
