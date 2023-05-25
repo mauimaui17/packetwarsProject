@@ -111,7 +111,6 @@ public class Ship extends Sprite{
 		}
 		System.out.println("HP: " + this.strength);
 	}
-
 	public int getScore() {
 		return this.economy;
 	}

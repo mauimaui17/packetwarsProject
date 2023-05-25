@@ -22,11 +22,6 @@ public class ChatServer {
                     break;
                 }
                 System.out.println("Received message: " + message);
-
-                // Process the message as needed
-                // For example, you can send it to other connected clients
-
-                // Send a response back to the client
                 out.println("Received message: " + message);
             }
 

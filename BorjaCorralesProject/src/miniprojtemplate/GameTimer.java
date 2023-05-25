@@ -53,10 +53,7 @@ public class GameTimer extends AnimationTimer{
 	private Rectangle rect2;
 	private Rectangle rect3;
 
-    private Text chatText;
-    private TextField chatInput;
-    private Socket socket;
-    private PrintWriter out;
+	
 	private long seconds;
 	private long startTime;
 	private long lastShot;
@@ -69,13 +66,12 @@ public class GameTimer extends AnimationTimer{
 	
 	public final static int playerX = GameStage.WINDOW_WIDTH/2;
 	public final static int playerY = GameStage.WINDOW_HEIGHT/2;
-	GameTimer(GraphicsContext gc, Scene theScene, GridPane overlay){
+	GameTimer(GraphicsContext gc, Scene theScene, VBox root){
 		this.gc = gc;
 		this.theScene = theScene;
 		this.myShip = new Ship("Going merry",playerX, playerY);
 		//instantiate the ArrayList of Fish
 		this.fishes = new ArrayList<Fish>();
-		this.chat(overlay);
 		this.seconds = 0;
 		this.respite = 5;
 		this.startTime = System.nanoTime();
@@ -84,37 +80,9 @@ public class GameTimer extends AnimationTimer{
 		//call method to handle mouse click event
 		this.spawnFishes(5);
 		this.handleKeyPressEvent();
-        try {
-            socket = new Socket("localhost", 1234);
-            out = new PrintWriter(socket.getOutputStream(), true);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-		
+
 		this.rect1 = new Rectangle(200, 150, 100, 800);
 	}
-	private void chat(GridPane overlay) {
-        chatInput = new TextField();
-        chatInput.setPromptText("Enter your message...");
-        chatInput.setOnKeyPressed(e -> {
-            if (e.getCode() == KeyCode.ENTER) {
-                String message = chatInput.getText();
-                processChatMessage(message);
-                chatInput.clear();
-            }
-        });
-        GridPane.setConstraints(chatInput, 0, 0);
-        overlay.getChildren().add(chatInput);
-        this.chatText = new Text();
-        GridPane.setConstraints(chatText, 0, 1);
-        overlay.getChildren().add(chatText);
-	}
-    private void processChatMessage(String message) {
-    	   System.out.println(message);
-           this.chatText.setText("Chat: " + message);
-           out.println(message); // Send the message to the server
-    }
-
 	@Override
 	public void handle(long currentNanoTime) {
 		this.gc.clearRect(0, 0, GameStage.WINDOW_WIDTH,GameStage.WINDOW_HEIGHT);
@@ -180,11 +148,11 @@ public class GameTimer extends AnimationTimer{
 	}
 	
 	private void upgradeMaxHealth() {
-		this.myShip.addMaxHealth();
+		this.myShip.addMaxHealth();;
 	}
 	
 	private void addDamage() {
-		
+		this.myShip.damage += 5;
 	}
 	
 	//method that will render/draw the fishes to the canvas
@@ -253,7 +221,7 @@ public class GameTimer extends AnimationTimer{
 	private void handleKeyPressEvent() {
 		this.theScene.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			public void handle(MouseEvent e) {
-				double mouseX = e.getX();
+				double mouseX = e.getX()-100;
 				double mouseY = e.getY();
 				double dx = mouseX - GameTimer.playerX;
 				double dy = mouseY - GameTimer.playerY;
@@ -262,12 +230,6 @@ public class GameTimer extends AnimationTimer{
 				shoot(angle);
 			}
 		});
-		this.theScene.setOnKeyReleased(new EventHandler<KeyEvent>(){
-		            public void handle(KeyEvent e){
-		            	KeyCode code = e.getCode();
-		                stopMyShip(code);
-		            }
-		        });
 		GameStage.repairShip.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			public void handle(MouseEvent e) {
 				repairUpgrade();
@@ -295,6 +257,7 @@ public class GameTimer extends AnimationTimer{
 					b.setVisible(false);
 					this.myShip.addScore(Fish.FISH_POINT_VAL);
 					this.myShip.earnMoney();
+					f.damaged(this.myShip.getAtkDmg());
 				}
 			}
 		}
