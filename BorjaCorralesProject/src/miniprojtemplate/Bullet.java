@@ -8,11 +8,13 @@ public class Bullet extends Sprite {
 	public final static int BULLET_HEIGHT = 30;
 	private final int BULLET_SPEED = 20;
 	public double angle;
-
-	public Bullet(int x, int y, double angle){
+	protected int damage;
+	
+	public Bullet(int x, int y, double angle, int damage){
 		super(x,y);
 		this.loadImage(Bullet.BULLET_IMAGE);
 		this.angle = angle;
+		this.damage = damage;
 	}
 
 	public void move(double angle) {

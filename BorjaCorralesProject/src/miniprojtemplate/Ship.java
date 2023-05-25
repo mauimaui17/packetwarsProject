@@ -20,7 +20,8 @@ public class Ship extends Sprite{
 	public final static long POWER_IMMUNE_TIME = 1;
 	private boolean mercyImmunity;
 	private boolean powerImmunity;
-
+	protected int damage;
+	private int money;
 	public Ship(String name, int x, int y){
 		super(x,y);
 		this.name = name;
@@ -33,6 +34,8 @@ public class Ship extends Sprite{
 		this.score = 0;
 		this.mercyImmunity = false;
 		this.powerImmunity = false;
+		this.damage = 10;
+		this.money = 100;
 	}
 
 	public boolean isAlive(){
@@ -58,7 +61,7 @@ public class Ship extends Sprite{
 		/*
 		 * TODO: Instantiate a new bullet and add it to the bullets arraylist of ship
 		 */
-		this.bullets.add(new Bullet(x,y,angle));
+		this.bullets.add(new Bullet(x,y,angle,this.damage));
     }
 
 	//method called if up/down/left/right arrow key is pressed.
@@ -86,7 +89,12 @@ public class Ship extends Sprite{
 			this.y = (GameStage.WINDOW_HEIGHT - 50);
 		}
 	}
-
+	public int getMoney() {
+		return this.money;
+	}
+	public void addMoney(int reward) {
+		this.money += reward;
+	}
 	public void getDamaged(int damage) {
 		if(this.strength > 0) {
 			this.strength -= damage;
@@ -101,7 +109,9 @@ public class Ship extends Sprite{
 	public int getScore() {
 		return this.score;
 	}
-
+	public int getAtkDmg() {
+		return this.damage;
+	}
 	public void addScore(int value) {
 		this.score += value;
 	}
