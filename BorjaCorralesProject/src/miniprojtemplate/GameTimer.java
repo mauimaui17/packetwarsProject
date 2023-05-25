@@ -14,10 +14,12 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
 import javafx.event.ActionEvent;
 
+import javafx.scene.control.Button;
 /*
  * The GameTimer is a subclass of the AnimationTimer class. It must override the handle method.
  */
@@ -38,6 +40,10 @@ public class GameTimer extends AnimationTimer{
 	private ArrayList<Boss> boss;
 	private ArrayList<Shield> shield;
 	private ArrayList<Repair> repair;
+	
+	private Rectangle rect1;
+	private Rectangle rect2;
+	private Rectangle rect3;
 
 	private long seconds;
 	private long startTime;
@@ -68,6 +74,8 @@ public class GameTimer extends AnimationTimer{
 		//call method to handle mouse click event
 		this.spawnFishes(5);
 		this.handleKeyPressEvent();
+		
+		this.rect1 = new Rectangle(200, 150, 100, 800);
 	}
 
 	@Override
@@ -105,6 +113,7 @@ public class GameTimer extends AnimationTimer{
 			this.gameOver();
 		}
 		this.statusBar();
+		this.upgradeButton();
 	}
 
 	private void statusBar() {
@@ -124,6 +133,27 @@ public class GameTimer extends AnimationTimer{
 			this.gc.drawImage(Shield.SHIELD, 0,0);
 		}
 	}
+	
+	private void upgradeButton() {
+		this.rect1.setOnMouseClicked(new EventHandler<MouseEvent>() {
+			public void handle(MouseEvent e) {
+				repairUpgrade();
+			}
+		});
+	}
+	
+	public void repairUpgrade() {
+		this.myShip.repair();
+	}
+	
+	private void upgradeMaxHealth() {
+		this.myShip.addMaxHealth();
+	}
+	
+	private void addDamage() {
+		
+	}
+	
 	//method that will render/draw the fishes to the canvas
 	private void renderFishes() {
 		for (Fish f : this.fishes){
@@ -224,6 +254,11 @@ public class GameTimer extends AnimationTimer{
 		                stopMyShip(code);
 		            }
 		        });
+		GameStage.repairShip.setOnMouseClicked(new EventHandler<MouseEvent>() {
+			public void handle(MouseEvent e) {
+				repairUpgrade();
+			}
+		});
     }
 	private void shoot(double angle) {
 		System.out.println("Angle: "+angle);
@@ -261,6 +296,7 @@ public class GameTimer extends AnimationTimer{
 					b.setVisible(false);
 					f.die();
 					this.myShip.addScore(Fish.FISH_POINT_VAL);
+					this.myShip.earnMoney();
 				}
 			}
 		}

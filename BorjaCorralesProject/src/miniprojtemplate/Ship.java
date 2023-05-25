@@ -9,7 +9,9 @@ import javafx.scene.image.Image;
 public class Ship extends Sprite{
 	private String name;
 	private int strength;
+	private int maxStrength;
 	private boolean alive;
+	private int economy;
 
 	private ArrayList<Bullet> bullets;
 	public final static Image SHIP_IMAGE = new Image("images/ship.png",70,Ship.SHIP_WIDTH,false,false);
@@ -33,6 +35,10 @@ public class Ship extends Sprite{
 		this.score = 0;
 		this.mercyImmunity = false;
 		this.powerImmunity = false;
+		
+		
+		this.economy = 150;
+		this.maxStrength = this.strength;
 	}
 
 	public boolean isAlive(){
@@ -45,6 +51,7 @@ public class Ship extends Sprite{
 
 	public void die(){
     	this.alive = false;
+    	System.out.println("Economy:"+this.economy);
     }
 
 	//method that will get the bullets 'shot' by the ship
@@ -90,7 +97,7 @@ public class Ship extends Sprite{
 	public void getDamaged(int damage) {
 		if(this.strength > 0) {
 			this.strength -= damage;
-			this.mercyImmunity = true;
+//			this.mercyImmunity = true;
 		}
 		if(this.strength <= 0) {
 			this.die();
@@ -99,16 +106,34 @@ public class Ship extends Sprite{
 	}
 
 	public int getScore() {
-		return this.score;
+		return this.economy;
 	}
 
 	public void addScore(int value) {
 		this.score += value;
 	}
 
-	public void heal() {
-		this.strength += 50;
+	//upgrade1: repair - adds 100hp back
+	public void repair() {
+		if(this.economy-150>=0) {
+			this.strength += 100;
+			this.economy -= 150;
+			if(this.strength>this.maxStrength) {
+				this.strength = this.maxStrength;
+			}
+		}
 	}
+	
+	//upgrade2: increases max hp by 100
+	public void addMaxHealth() {
+		this.maxStrength += 100;
+	}
+	
+	//add 10 to the economy every time 	the ship kills a fish
+	public void earnMoney() {
+		this.economy += 10;
+	}
+	
 	public void resetMercy() {
 		this.mercyImmunity = false;
 	}	
@@ -128,6 +153,9 @@ public class Ship extends Sprite{
 		return (this.getPowerImmunity() || this.getMercyImmunity());
 	}
 	public int getStrength() {
+		if(this.strength<0) {
+			return 0;
+		}
 		return this.strength;
 	}
 }
