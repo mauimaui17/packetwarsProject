@@ -1,38 +1,80 @@
 package miniprojtemplate;
+
 import java.io.*;
 import java.net.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ChatServer {
-    public static final int PORT = 1234;
+    public static final int PORT = 1236;
+    public static final String IP_ADDRESS = "0.0.0.0"; // Replace with the desired IP address
+
+    private static List<Socket> connectedClients = new ArrayList<>();
+    private static List<PrintWriter> clientWriters = new ArrayList<>(); // Stores the PrintWriter for each connected client
 
     public static void main(String[] args) {
         try {
-            ServerSocket serverSocket = new ServerSocket(PORT);
-            System.out.println("Server started. Listening on port " + PORT);
-
-            Socket clientSocket = serverSocket.accept();
-            System.out.println("Client connected: " + clientSocket);
-
-            BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-            PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+            InetAddress ipAddress = InetAddress.getByName(IP_ADDRESS);
+            ServerSocket serverSocket = new ServerSocket(PORT, 0, ipAddress);
+            System.out.println("Server started. Listening on " + IP_ADDRESS + ":" + PORT);
 
             while (true) {
-                String message = in.readLine();
-                if (message == null) {
-                    break;
-                }
-                System.out.println("Received message: " + message);
+                Socket clientSocket = serverSocket.accept();
+                System.out.println("Client connected: " + clientSocket);
 
-                // Process the message as needed
-                // For example, you can send it to other connected clients
+                // Add the client socket to the list of connected clients
+                connectedClients.add(clientSocket);
 
-                // Send a response back to the client
-                out.println("Received message: " + message);
+                // Create a new PrintWriter for the client
+                PrintWriter clientWriter = new PrintWriter(clientSocket.getOutputStream(), true);
+                clientWriters.add(clientWriter);
+
+                // Create a new thread for the client
+                Thread clientThread = new Thread(new ClientHandler(clientSocket, clientWriter));
+                clientThread.start();
             }
-
-            serverSocket.close();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    // Thread class to handle communication with a client
+    private static class ClientHandler implements Runnable {
+        private Socket clientSocket;
+        private PrintWriter clientWriter;
+
+        public ClientHandler(Socket clientSocket, PrintWriter clientWriter) {
+            this.clientSocket = clientSocket;
+            this.clientWriter = clientWriter;
+        }
+
+        @Override
+        public void run() {
+            try {
+                BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+
+                while (true) {
+                    String message = in.readLine();
+                    if (message == null) {
+                        break;
+                    }
+                    System.out.println("Received message from client: " + message);
+                    clientWriter.println("Received message: " + message);
+
+                    // Send the received message back to all connected clients
+                    for (PrintWriter writer : clientWriters) {
+                        writer.println(message);
+                    }
+                }
+
+                // Remove the client socket and writer from the lists
+                connectedClients.remove(clientSocket);
+                clientWriters.remove(clientWriter);
+
+                clientSocket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

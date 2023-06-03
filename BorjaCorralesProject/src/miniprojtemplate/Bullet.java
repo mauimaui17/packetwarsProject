@@ -6,6 +6,7 @@ public class Bullet extends Sprite {
 	public final static Image BULLET_IMAGE = new Image("images/bullet1.png",Bullet.BULLET_WIDTH,Bullet.BULLET_HEIGHT,false,false);
 	public final static int BULLET_WIDTH = 100;
 	public final static int BULLET_HEIGHT = 30;
+	private int bulletDamage = 10;
 	private final int BULLET_SPEED = 20;
 	public double angle;
 	protected int damage;
@@ -29,4 +30,6 @@ public class Bullet extends Sprite {
 	        this.setVisible(false);
 	    }
 	}
+	
+//	pivate 
 }
