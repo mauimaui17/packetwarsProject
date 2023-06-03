@@ -3,7 +3,9 @@ package miniprojtemplate;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
@@ -43,6 +45,7 @@ public class GameStage {
     private TextField chatInput;
     private Socket socket;
     private PrintWriter out;
+    private BufferedReader in;
 	private GridPane overlay;
 	//the class constructor
 	public GameStage() {
@@ -70,8 +73,9 @@ public class GameStage {
 		root.getChildren().add(addMaxDamage);
 		this.gametimer = new GameTimer(this.gc,this.scene,this.root);
         try {
-            socket = new Socket("0.0.0.0", 1234);
+            socket = new Socket("0.0.0.0", 1236);
             out = new PrintWriter(socket.getOutputStream(), true);
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -102,7 +106,6 @@ public class GameStage {
 		GameStage.stage.setTitle("Packet Wars");
 		
 
-		
 		//set stage elements here
 		//this.root.getChildren().add(canvas);
 		this.root.getChildren().add(this.canvas);
@@ -113,6 +116,8 @@ public class GameStage {
 		this.gametimer.start();
 
 		GameStage.stage.show();
+		Thread receiveThread = new Thread(new ReceiveHandler());
+        receiveThread.start();
 	}
 	private void chat(VBox root) {
         chatInput = new TextField();
@@ -137,7 +142,23 @@ public class GameStage {
            out.println(message); // Send the message to the server
            
     }
-
+    private class ReceiveHandler implements Runnable {
+        @Override
+        public void run() {
+            try {
+                String message;
+                while ((message = in.readLine()) != null) {
+                    // Handle the received message
+                    displayMessage(message);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    public void displayMessage(String message) {
+        System.out.println("Received message from server: " + message);
+    }
 	public static Stage getStage() {
 		
 		return GameStage.stage;

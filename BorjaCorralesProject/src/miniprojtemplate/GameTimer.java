@@ -76,9 +76,9 @@ public class GameTimer extends AnimationTimer{
 		this.respite = 5;
 		this.startTime = System.nanoTime();
 		//call the spawnFishes method
-		this.spawnFishes(GameTimer.FIRST_FISHES);
+		//this.spawnFishes(GameTimer.FIRST_FISHES);
 		//call method to handle mouse click event
-		this.spawnFishes(5);
+		//this.spawnFishes(5);
 		this.handleKeyPressEvent();
 
 		this.rect1 = new Rectangle(200, 150, 100, 800);
@@ -92,11 +92,11 @@ public class GameTimer extends AnimationTimer{
 		this.moveFishes();
 		//render the ship
 		this.myShip.render(this.gc);
-		if(seconds - this.spawnTime == (5+this.respite)) {
+		/*if(seconds - this.spawnTime == (5+this.respite)) {
 			this.spawnFishes(5+this.modifier);
 			this.modifier+=1;
 			System.out.println("FISH POP: " + this.fishes.size());
-		}
+		}*/
 		this.renderFishes();
 		this.renderBullets();
 		
