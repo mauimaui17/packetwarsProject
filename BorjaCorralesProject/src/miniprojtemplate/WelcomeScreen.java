@@ -47,13 +47,15 @@ public class WelcomeScreen {
 		Button b2 = new Button ("Instructions");
 		Button b3 = new Button ("About");
 		Button b4 = new Button ("Exit");
+		Button b5 = new Button ("Chat Lobby");
 		this.textProp(title);
 		this.buttonProp(b1, stage);
 		this.buttonProp(b2, stage);
 		this.buttonProp(b3, stage);
 		this.buttonProp(b4, stage);
+		this.buttonProp(b5, stage);
 
-		this.vbox.getChildren().addAll(title,b1, b2, b3, b4);
+		this.vbox.getChildren().addAll(title,b1, b2, b3, b4, b5);
 		this.canvas.getGraphicsContext2D();
 
 		this.root.setBackground(this.bground);
@@ -127,6 +129,15 @@ public class WelcomeScreen {
 					btn.setDisable(true);
 					System.out.println(btn.getText());
 					System.exit(0);
+				}
+			});
+		} else if (btn.getText()=="Chat Lobby"){
+			btn.setOnMouseClicked(new EventHandler<MouseEvent>(){
+				@Override
+				public void handle(MouseEvent e){
+					btn.setDisable(true);
+					Instructions ins = new Instructions();
+					ins.setStageComponents(stage);
 				}
 			});
 		}
