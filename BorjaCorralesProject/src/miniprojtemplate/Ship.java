@@ -12,7 +12,9 @@ public class Ship extends Sprite{
 	private int maxStrength;
 	private boolean alive;
 	private int economy;
-
+	public final static int REPAIR_COST = 150;
+	public final static int UPGRADE_HP_COST = 250;
+	public final static int UPGRADE_DMG_COST = 300;
 	private ArrayList<Bullet> bullets;
 	public final static Image SHIP_IMAGE = new Image("images/ship.png",70,Ship.SHIP_WIDTH,false,false);
 	private final static int SHIP_WIDTH = 50;
@@ -20,10 +22,10 @@ public class Ship extends Sprite{
 	public final static long FIRE_RATE = 100000000L;
 	public final static long MERCY_TIME = 1;
 	public final static long POWER_IMMUNE_TIME = 1;
-	private boolean mercyImmunity;
-	private boolean powerImmunity;
 	protected int damage;
 	private int money;
+	private int hpLevel;
+	private int dmgLevel;
 	public Ship(String name, int x, int y){
 		super(x,y);
 		this.name = name;
@@ -34,16 +36,16 @@ public class Ship extends Sprite{
 		this.bullets = new ArrayList<Bullet>();
 		this.loadImage(Ship.SHIP_IMAGE);
 		this.score = 0;
-		this.mercyImmunity = false;
-		this.powerImmunity = false;
 		this.damage = 10;
 		this.money = 100;
-		
-		
 		this.economy = 150;
 		this.maxStrength = this.strength;
+		this.hpLevel = 1;
+		this.dmgLevel = 1;
 	}
-
+	public int getMaxHealth() {
+		return this.maxStrength;
+	}
 	public boolean isAlive(){
 		if(this.alive) return true;
 		return false;
@@ -72,30 +74,6 @@ public class Ship extends Sprite{
     }
 
 	//method called if up/down/left/right arrow key is pressed.
-	public void move() {
-		/*
-		 *TODO: 		Only change the x and y position of the ship if the current x,y position
-		 *				is within the gamestage width and height so that the ship won't exit the screen
-		 */
-		this.x += this.dx;
-		this.y += this.dy;
-		//check bounds. left most boundary is x = 0, right most is window width
-		//upper boundary is y = 0, lower boundary is window height.
-		//the width and height are also reduced because the title bar is included
-		//in window size but is not part of the actual game.
-		if(this.x < 0) {
-			this.x = 0; //once its x reaches a position less than 0, reset it to 0.
-		}
-		if(this.y < 36) {
-			this.y = 36; //if it goes beyond the upper boundary, reset its y to 0.
-		}
-		if(this.x >= (GameStage.WINDOW_WIDTH - 50)) {
-			this.x = GameStage.WINDOW_WIDTH - 50;
-		}
-		if(this.y >= (GameStage.WINDOW_HEIGHT - 50)) {
-			this.y = (GameStage.WINDOW_HEIGHT - 50);
-		}
-	}
 	public int getMoney() {
 		return this.money;
 	}
@@ -122,44 +100,42 @@ public class Ship extends Sprite{
 	}
 
 	//upgrade1: repair - adds 100hp back
-	public void repair() {
+	public int repair() {
 		if(this.economy-150>=0) {
-			this.strength += 100;
-			this.economy -= 150;
 			if(this.strength>this.maxStrength) {
 				this.strength = this.maxStrength;
+			} else if(this.strength == this.maxStrength) {
+				return 2;
+			} else {
+				this.strength += 100;
+				this.economy -= 150;
+				return 1;
 			}
 		}
+		return 0;
 	}
 	
 	//upgrade2: increases max hp by 100
-	public void addMaxHealth() {
-		this.maxStrength += 100;
+	public Boolean addMaxHealth() {
+		if(this.economy-(Ship.UPGRADE_HP_COST*this.hpLevel)>=0) {
+			this.maxStrength += 200;
+			this.economy -= Ship.UPGRADE_HP_COST*this.hpLevel;
+			return true;
+		} return false;
+	}
+	public Boolean upgradeDamage() {
+		if(this.economy-(Ship.UPGRADE_DMG_COST*this.dmgLevel)>=0) {
+			this.damage += 10;
+			this.economy -= Ship.UPGRADE_HP_COST*this.hpLevel;
+			return true;
+		} return false;
 	}
 	
 	//add 10 to the economy every time 	the ship kills a fish
-	public void earnMoney() {
-		this.economy += 10;
+	public void earnMoney(int money) {
+		this.economy += money;
 	}
 	
-	public void resetMercy() {
-		this.mercyImmunity = false;
-	}	
-	public void resetImmunity() {
-		this.powerImmunity = false;
-	}
-	public boolean getMercyImmunity() {
-		return this.mercyImmunity;
-	}
-	public boolean getPowerImmunity() {
-		return this.powerImmunity;
-	}
-	public void setPowerImmunity() {
-		this.powerImmunity = true;
-	}
-	public boolean generalImmunity() {
-		return (this.getPowerImmunity() || this.getMercyImmunity());
-	}
 	public int getStrength() {
 		if(this.strength<0) {
 			return 0;

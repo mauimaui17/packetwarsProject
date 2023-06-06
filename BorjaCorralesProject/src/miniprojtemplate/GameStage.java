@@ -29,10 +29,7 @@ import javafx.stage.Stage;
 public class GameStage {
 	public static final int WINDOW_HEIGHT = 900;
 	public static final int WINDOW_WIDTH = 1740;
-	
-	public static final Button repairShip = new Button("Repair");
-	public static final Button addMaxHealth =  new Button("Upgrade Max Health");
-	public static final Button addMaxDamage = new Button("Upgrade Max Damage");
+
 	private Scene scene;
 	private static Stage stage;
 	private VBox root;
@@ -56,46 +53,14 @@ public class GameStage {
 		this.gc = canvas.getGraphicsContext2D();
 		//instantiate an animation timer
         this.overlay = new GridPane();		
-        repairShip.setTranslateX(100);
-		repairShip.setTranslateY(800);
-		repairShip.setPrefSize(200, 200);
-		
-		addMaxHealth.setTranslateX(400);
-		addMaxHealth.setTranslateY(773);
-		addMaxHealth.setPrefSize(200, 200);
-		
-		addMaxDamage.setTranslateX(700);
-		addMaxDamage.setTranslateY(748);
-		addMaxDamage.setPrefSize(200, 200);
-		
-		root.getChildren().add(repairShip);
-		root.getChildren().add(addMaxHealth);
-		root.getChildren().add(addMaxDamage);
 		this.gametimer = new GameTimer(this.gc,this.scene,this.root);
         try {
-            socket = new Socket("0.0.0.0", 1236);
+            socket = new Socket("0.0.0.0", 6000);
             out = new PrintWriter(socket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         } catch (IOException e) {
             e.printStackTrace();
         }
-        repairShip.setOnAction(e -> {
-            // Action to perform when repairShip button is clicked
-            System.out.println("Repair button clicked");
-            // Perform repair action or any other logic
-        });
-
-        addMaxHealth.setOnAction(e -> {
-            // Action to perform when addMaxHealth button is clicked
-            System.out.println("Add Max Health button clicked");
-            // Perform addMaxHealth action or any other logic
-        });
-
-        addMaxDamage.setOnAction(e -> {
-            // Action to perform when addMaxDamage button is clicked
-            System.out.println("Add Max Damage button clicked");
-            // Perform addMaxDamage action or any other logic
-        });
 	}
 	//method to add the stage elements
 	public void setStage(Stage stage) {
@@ -133,14 +98,28 @@ public class GameStage {
         root.getChildren().add(chatInput);
         this.chatText = new Text();
         chatText.setTranslateX(800);
-        chatText.setTranslateY(200);
+        chatText.setTranslateY(800);
         root.getChildren().add(chatText);
 	}
     private void processChatMessage(String message) {
-    	   System.out.println(message);
            this.chatText.setText("Chat: " + message);
-           out.println(message); // Send the message to the server
-           
+           if(message.equals("/attack")) {
+        	   if (this.gametimer.sendWave()) {
+        		   out.println(message);
+        	   } else {
+        		   out.println("Someone just tried to send out an attack! No money though.");
+        	   }
+           }
+           //read this, these functions called return strings. I want these to appear on the user's chat.
+           else if(message.equals("/repair")) {
+        	   this.gametimer.repairUpgrade();
+           } else if (message.equals("/hpup")) {
+        	   this.gametimer.upgradeHealth();
+           } else if (message.equals("/dmup")) {
+        	   this.gametimer.upgradeDamage();
+           } else {
+        	   out.println(message);
+           }
     }
     private class ReceiveHandler implements Runnable {
         @Override
@@ -149,7 +128,7 @@ public class GameStage {
                 String message;
                 while ((message = in.readLine()) != null) {
                     // Handle the received message
-                    displayMessage(message);
+                	displayMessage(message);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -158,6 +137,9 @@ public class GameStage {
     }
     public void displayMessage(String message) {
         System.out.println("Received message from server: " + message);
+        if(message.equals("/attack")) {
+        	this.gametimer.spawnFishes(5);
+        }
     }
 	public static Stage getStage() {
 		

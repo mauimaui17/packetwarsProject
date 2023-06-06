@@ -6,6 +6,7 @@ import java.util.Random;
 public class Fish extends Sprite {
 	public final static Image FISH_IMAGE = new Image("images/enemy.png",Fish.FISH_WIDTH,Fish.FISH_WIDTH,false,false);
 	public final static int FISH_POINT_VAL = 1;
+	public final static int FISH_ECON_VAL = 10;
 	public final static int FISH_STRENGTH = 5;
 	public final static int FISH_WIDTH=30;
 	public final static int MAX_FISH_SPEED = 5;

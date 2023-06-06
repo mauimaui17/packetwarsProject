@@ -63,11 +63,13 @@ public class GameTimer extends AnimationTimer{
 	private boolean boss_kill;
 	private int modifier;
 	private int respite;
+	private VBox root;
 	
 	public final static int playerX = GameStage.WINDOW_WIDTH/2;
-	public final static int playerY = GameStage.WINDOW_HEIGHT/2;
+	public final static int playerY = (GameStage.WINDOW_HEIGHT-100)/2;
 	GameTimer(GraphicsContext gc, Scene theScene, VBox root){
 		this.gc = gc;
+		this.root = root;
 		this.theScene = theScene;
 		this.myShip = new Ship("Going merry",playerX, playerY);
 		//instantiate the ArrayList of Fish
@@ -85,18 +87,18 @@ public class GameTimer extends AnimationTimer{
 	}
 	@Override
 	public void handle(long currentNanoTime) {
-		this.gc.clearRect(0, 0, GameStage.WINDOW_WIDTH,GameStage.WINDOW_HEIGHT);
+		this.gc.clearRect(0, 0, GameStage.WINDOW_WIDTH,GameStage.WINDOW_HEIGHT-100);
 		this.seconds = TimeUnit.NANOSECONDS.toSeconds(System.nanoTime());
 		this.startSec = TimeUnit.NANOSECONDS.toSeconds(this.startTime);
 		this.moveBullets();
 		this.moveFishes();
 		//render the ship
 		this.myShip.render(this.gc);
-		/*if(seconds - this.spawnTime == (5+this.respite)) {
+		if(seconds - this.spawnTime == (5+this.respite)) {
 			this.spawnFishes(5+this.modifier);
 			this.modifier+=1;
 			System.out.println("FISH POP: " + this.fishes.size());
-		}*/
+		}
 		this.renderFishes();
 		this.renderBullets();
 		
@@ -123,16 +125,13 @@ public class GameTimer extends AnimationTimer{
 		this.gc.drawImage(skull, 1200, 5);
 		this.gc.fillText(": " + this.myShip.getScore(), 1235, 35);
 		this.gc.drawImage(hp, 1610, 5);
-		this.gc.fillText(": " + this.myShip.getStrength(), 1650, 35);
+		this.gc.fillText(": " + this.myShip.getStrength() +"/" + this.myShip.getMaxHealth(), 1600, 35);
 		this.gc.drawImage(clock, 1350, 5);
 		int totalTime = 120; // in seconds
 		long elapsedTime = seconds - startSec;
 		long remainingTime = totalTime - elapsedTime;
 		String formattedTime = String.format("%02d:%02d", remainingTime / 60, remainingTime % 60);
 		this.gc.fillText(": " + formattedTime, 1400, 35);
-		if(this.myShip.generalImmunity() == true) {
-			this.gc.drawImage(Shield.SHIELD, 0,0);
-		}
 	}
 	
 	private void upgradeButton() {
@@ -143,16 +142,33 @@ public class GameTimer extends AnimationTimer{
 		});
 	}
 	
-	public void repairUpgrade() {
-		this.myShip.repair();
+	public String repairUpgrade() {
+		int retVal = this.myShip.repair();
+		if(retVal == 2) {
+			return("Already at full health!");
+		} else if(retVal == 1) {
+			return("Repair success!");
+		} else {
+			return("Not enough cash!");
+		}
 	}
 	
-	private void upgradeMaxHealth() {
-		this.myShip.addMaxHealth();;
+	public String upgradeHealth() {
+		Boolean retVal = this.myShip.addMaxHealth();
+		if(retVal) {
+			return("Upgraded your health!");
+		} else {
+			return("Not enough cash!");
+		}
 	}
 	
-	private void addDamage() {
-		this.myShip.damage += 5;
+	public String upgradeDamage() {
+		Boolean retVal = this.myShip.upgradeDamage();
+		if(retVal) {
+			return("Your damage has been upgraded!");
+		} else {
+			return("Not enough cash!");
+		}
 	}
 	
 	//method that will render/draw the fishes to the canvas
@@ -175,7 +191,7 @@ public class GameTimer extends AnimationTimer{
 	}
 
 	//method that will spawn/instantiate three fishes at a random x,y location
-	private void spawnFishes(int fishCount){
+	public void spawnFishes(int fishCount){
 		this.spawnTime = TimeUnit.NANOSECONDS.toSeconds(System.nanoTime());
 		for(int i=0;i<fishCount;i++){
 			int x = 0;
@@ -186,7 +202,13 @@ public class GameTimer extends AnimationTimer{
 			this.fishes.add(new Fish(x,y));
 		}
 	}
-
+	public Boolean sendWave() {
+		if(this.myShip.getMoney() >= 500) {
+			this.myShip.earnMoney(-500);
+			return true;
+		}
+		return false;
+	}
 	//method that will move the bullets shot by a ship
 	private void moveBullets(){
 		//create a local arraylist of Bullets for the bullets 'shot' by the ship
@@ -211,6 +233,8 @@ public class GameTimer extends AnimationTimer{
 			if(f.isAlive() == true) {
 				f.move();
 			} else {
+				this.myShip.addScore(Fish.FISH_POINT_VAL);
+				this.myShip.earnMoney(Fish.FISH_ECON_VAL);
 				this.fishes.remove(i);
 			}
 		}
@@ -221,7 +245,7 @@ public class GameTimer extends AnimationTimer{
 	private void handleKeyPressEvent() {
 		this.theScene.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			public void handle(MouseEvent e) {
-				double mouseX = e.getX()-100;
+				double mouseX = e.getX();
 				double mouseY = e.getY();
 				double dx = mouseX - GameTimer.playerX;
 				double dy = mouseY - GameTimer.playerY;
@@ -230,21 +254,15 @@ public class GameTimer extends AnimationTimer{
 				shoot(angle);
 			}
 		});
-		GameStage.repairShip.setOnMouseClicked(new EventHandler<MouseEvent>() {
-			public void handle(MouseEvent e) {
-				repairUpgrade();
-			}
-		});
     }
 	private void shoot(double angle) {
-		System.out.println("Angle: "+angle);
 		this.myShip.shoot(GameTimer.playerX, GameTimer.playerY, angle);
 	}
 
 	private void collisionCheck() {
 		for(int i = 0; i < this.fishes.size(); i++) {
 			Fish f = this.fishes.get(i);
-			if(this.myShip.collidesWith(f) && this.myShip.generalImmunity() == false) {
+			if(this.myShip.collidesWith(f)) {
 				//fish dies, myship gets damaged.
 				this.myShip.getDamaged(Fish.FISH_STRENGTH);
 				//this.immunityTime = TimeUnit.NANOSECONDS.toSeconds(System.nanoTime());
@@ -255,8 +273,6 @@ public class GameTimer extends AnimationTimer{
 				Bullet b = this.myShip.getBullets().get(j);
 				if(b.collidesWith(this.fishes.get(i))) {
 					b.setVisible(false);
-					this.myShip.addScore(Fish.FISH_POINT_VAL);
-					this.myShip.earnMoney();
 					f.damaged(this.myShip.getAtkDmg());
 				}
 			}
