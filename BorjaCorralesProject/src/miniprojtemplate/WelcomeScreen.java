@@ -55,7 +55,7 @@ public class WelcomeScreen {
 		this.buttonProp(b4, stage);
 		this.buttonProp(b5, stage);
 
-		this.vbox.getChildren().addAll(title,b1, b2, b3, b4, b5);
+		this.vbox.getChildren().addAll(title, b1, b5, b2, b3, b4);
 		this.canvas.getGraphicsContext2D();
 
 		this.root.setBackground(this.bground);
@@ -136,8 +136,8 @@ public class WelcomeScreen {
 				@Override
 				public void handle(MouseEvent e){
 					btn.setDisable(true);
-					Instructions ins = new Instructions();
-					ins.setStageComponents(stage);
+					Lobby lobby = new Lobby();
+					lobby.setStageComponents(stage);
 				}
 			});
 		}
