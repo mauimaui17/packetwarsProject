@@ -115,7 +115,7 @@ public class GameStage {
     private void processChatMessage(String message) {
 		if(message.equals("/attack")) {
 		   if (this.gametimer.sendWave()) {
-			   out.println(message);
+			   out.println("Attack wave sent!");
 		   } else {
 			   out.println("Someone just tried to send out an attack! No money though.");
 		   }
@@ -163,11 +163,10 @@ public class GameStage {
 
         //System.out.println("Received message from server: " + message);
         if(message.equals("/attack")) {
-        	this.gametimer.spawnFishes(5);
+        	this.gametimer.spawnFishes(15);
         }
     }
 	public static Stage getStage() {
-		
 		return GameStage.stage;
 	}
 	
