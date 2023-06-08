@@ -30,7 +30,7 @@ public class Ship extends Sprite{
 		super(x,y);
 		this.name = name;
 		Random r = new Random();
-		this.strength = r.nextInt(51)+100;//random int from 0 to 50, 
+		this.strength = 100;//random int from 0 to 50, 
     //when 100 is added, the strength of the ship becomes 100 to 150.
 		this.alive = true;
 		this.bullets = new ArrayList<Bullet>();
@@ -38,7 +38,6 @@ public class Ship extends Sprite{
 		this.score = 0;
 		this.damage = 10;
 		this.money = 100;
-		this.economy = 150;
 		this.maxStrength = this.strength;
 		this.hpLevel = 1;
 		this.dmgLevel = 1;
@@ -56,7 +55,6 @@ public class Ship extends Sprite{
 
 	public void die(){
     	this.alive = false;
-    	System.out.println("Economy:"+this.economy);
     }
 
 	//method that will get the bullets 'shot' by the ship
@@ -90,7 +88,7 @@ public class Ship extends Sprite{
 		System.out.println("HP: " + this.strength);
 	}
 	public int getScore() {
-		return this.economy;
+		return this.score;
 	}
 	public int getAtkDmg() {
 		return this.damage;
@@ -101,14 +99,15 @@ public class Ship extends Sprite{
 
 	//upgrade1: repair - adds 100hp back
 	public int repair() {
-		if(this.economy-150>=0) {
+		if(this.money-150>=0) {
 			if(this.strength>this.maxStrength) {
 				this.strength = this.maxStrength;
 			} else if(this.strength == this.maxStrength) {
 				return 2;
 			} else {
-				this.strength += 100;
-				this.economy -= 150;
+				int repDam = this.maxStrength - this.strength;
+				this.strength += repDam;
+				this.money -= 150;
 				return 1;
 			}
 		}
@@ -117,23 +116,23 @@ public class Ship extends Sprite{
 	
 	//upgrade2: increases max hp by 100
 	public Boolean addMaxHealth() {
-		if(this.economy-(Ship.UPGRADE_HP_COST*this.hpLevel)>=0) {
+		if(this.money-(Ship.UPGRADE_HP_COST*this.hpLevel)>=0) {
 			this.maxStrength += 200;
-			this.economy -= Ship.UPGRADE_HP_COST*this.hpLevel;
+			this.money -= Ship.UPGRADE_HP_COST*this.hpLevel;
 			return true;
 		} return false;
 	}
 	public Boolean upgradeDamage() {
-		if(this.economy-(Ship.UPGRADE_DMG_COST*this.dmgLevel)>=0) {
+		if(this.money-(Ship.UPGRADE_DMG_COST*this.dmgLevel)>=0) {
 			this.damage += 10;
-			this.economy -= Ship.UPGRADE_HP_COST*this.hpLevel;
+			this.money -= Ship.UPGRADE_HP_COST*this.hpLevel;
 			return true;
 		} return false;
 	}
 	
 	//add 10 to the economy every time 	the ship kills a fish
 	public void earnMoney(int money) {
-		this.economy += money;
+		this.money += money;
 	}
 	
 	public int getStrength() {

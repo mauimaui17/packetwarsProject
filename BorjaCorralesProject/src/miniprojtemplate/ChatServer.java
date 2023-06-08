@@ -61,7 +61,11 @@ public class ChatServer {
                     System.out.println("Received message from client: " + message);
 
                     // Send the received message back to all connected clients
+                    
                     for (PrintWriter writer : clientWriters) {
+                    	if(message.equals("/attack") && writer == this.clientWriter) {
+                    		continue;
+                    	}
                         writer.println(message);
                     }
                 }
