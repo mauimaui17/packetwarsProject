@@ -12,9 +12,9 @@ public class Ship extends Sprite{
 	private int maxStrength;
 	private boolean alive;
 	private int economy;
-	public final static int REPAIR_COST = 150;
-	public final static int UPGRADE_HP_COST = 250;
-	public final static int UPGRADE_DMG_COST = 300;
+	public final static int REPAIR_COST = 10;
+	public final static int UPGRADE_HP_COST = 50;
+	public final static int UPGRADE_DMG_COST = 30;
 	private ArrayList<Bullet> bullets;
 	public final static Image SHIP_IMAGE = new Image("images/ship.png",70,Ship.SHIP_WIDTH,false,false);
 	private final static int SHIP_WIDTH = 50;
@@ -37,7 +37,7 @@ public class Ship extends Sprite{
 		this.loadImage(Ship.SHIP_IMAGE);
 		this.score = 0;
 		this.damage = 10;
-		this.money = 100;
+		this.money = 500;
 		this.maxStrength = this.strength;
 		this.hpLevel = 1;
 		this.dmgLevel = 1;
@@ -107,7 +107,7 @@ public class Ship extends Sprite{
 			} else {
 				int repDam = this.maxStrength - this.strength;
 				this.strength += repDam;
-				this.money -= 150;
+				this.money -= Ship.REPAIR_COST;
 				return 1;
 			}
 		}

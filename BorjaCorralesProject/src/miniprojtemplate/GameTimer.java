@@ -45,9 +45,6 @@ public class GameTimer extends AnimationTimer{
 	private Scene theScene;
 	private Ship myShip;
 	private ArrayList<Fish> fishes;
-	private ArrayList<Boss> boss;
-	private ArrayList<Shield> shield;
-	private ArrayList<Repair> repair;
 	
 	private Rectangle rect1;
 	private Rectangle rect2;
@@ -203,8 +200,8 @@ public class GameTimer extends AnimationTimer{
 		}
 	}
 	public Boolean sendWave() {
-		if(this.myShip.getMoney() >= 500) {
-			this.myShip.earnMoney(-500);
+		if(this.myShip.getMoney() >= 200) {
+			this.myShip.earnMoney(-200);
 			return true;
 		}
 		return false;

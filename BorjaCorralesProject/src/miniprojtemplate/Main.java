@@ -12,4 +12,4 @@ public class Main extends Application {
 		WelcomeScreen welcome = new WelcomeScreen();
 		welcome.setStageComponents(stage); //calls welcome screen
 	}
-}
+} 	
