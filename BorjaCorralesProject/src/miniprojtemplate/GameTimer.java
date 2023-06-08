@@ -116,7 +116,7 @@ public class GameTimer extends AnimationTimer{
 	}
 
 	private void statusBar() {
-		this.gc.setFill(Color.BLACK);
+		this.gc.setFill(Color.WHITE);
 		this.gc.setFont(Font.font("Impact", 40));
 		this.gc.fillText("Money: " + this.myShip.getMoney(), 950, 35);
 		this.gc.drawImage(skull, 1200, 5);

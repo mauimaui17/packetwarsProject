@@ -43,7 +43,7 @@ public class WelcomeScreen {
 		this.scene = new Scene(root, GameStage.WINDOW_WIDTH, GameStage.WINDOW_HEIGHT);
 		this.vbox = new VBox();
 		this.canvas = new Canvas(GameStage.WINDOW_WIDTH, GameStage.WINDOW_HEIGHT);
-//		this.bground = new Background(new BackgroundImage(new Image("/images/spayce.gif",GameStage.WINDOW_WIDTH,GameStage.WINDOW_HEIGHT,false,false),BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,BackgroundSize.DEFAULT));
+		this.bground = new Background(new BackgroundImage(new Image("/images/spayce.gif",GameStage.WINDOW_WIDTH,GameStage.WINDOW_HEIGHT,false,false),BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,BackgroundSize.DEFAULT));
 		this.font20px = Font.loadFont("file:resources/fonts/Starlord-Z8zJ.ttf", 20);
 		this.font40px = Font.loadFont("file:resources/fonts/Starlord-Z8zJ.ttf", 40);
 	}
@@ -83,7 +83,7 @@ public class WelcomeScreen {
 		this.vbox.getChildren().addAll(title,tName, hName, hTextIpPort,hIpAddress,b1, b4);
 		this.canvas.getGraphicsContext2D();
 
-//		this.root.setBackground(this.bground);
+		this.root.setBackground(this.bground);
 		this.root.getChildren().addAll(this.canvas,this.vbox);
 		stage.setScene(this.scene);
 		stage.setTitle("PACKETWARS");

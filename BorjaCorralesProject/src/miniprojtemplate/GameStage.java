@@ -37,8 +37,8 @@ public class GameStage {
 	private Canvas canvas;
 	private GraphicsContext gc;
 	private GameTimer gametimer;
-//	private BackgroundImage bgimg = new BackgroundImage(new Image("images/spayce.gif",GameStage.WINDOW_WIDTH,GameStage.WINDOW_HEIGHT,false,false),BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT,
-//			BackgroundPosition.DEFAULT,BackgroundSize.DEFAULT);
+	private BackgroundImage bgimg = new BackgroundImage(new Image("images/bg.jpg",GameStage.WINDOW_WIDTH,GameStage.WINDOW_HEIGHT,false,false),BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT,
+			BackgroundPosition.DEFAULT,BackgroundSize.DEFAULT);
     private Text chatText;
     private TextField chatInput;
     private Socket socket;
@@ -57,7 +57,7 @@ public class GameStage {
 		this.root = new VBox();
 		this.scene = new Scene(root, GameStage.WINDOW_WIDTH,GameStage.WINDOW_HEIGHT,Color.CADETBLUE);
 		this.canvas = new Canvas(GameStage.WINDOW_WIDTH,GameStage.WINDOW_HEIGHT-100);
-//		this.root.setBackground(new Background(this.bgimg));
+		this.root.setBackground(new Background(this.bgimg));
 		this.gc = canvas.getGraphicsContext2D();
 		//instantiate an animation timer
         this.overlay = new GridPane();		
@@ -160,6 +160,7 @@ public class GameStage {
     	});
     	chatText.setTranslateY(chatYOffsetBase - chatYOffset * chatYOffsetFac);
 		this.chatText.setText(messages.toString());
+		this.chatText.setFill(Color.WHITE);
 
         //System.out.println("Received message from server: " + message);
         if(message.equals("/attack")) {
