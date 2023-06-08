@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ChatServer {
-    public static final int PORT = 6000;
+    public static final int PORT = 1500;
     public static final String IP_ADDRESS = "0.0.0.0"; // Replace with the desired IP address
 
     private static List<Socket> connectedClients = new ArrayList<>();
@@ -58,7 +58,7 @@ public class ChatServer {
                     if (message == null) {
                         break;
                     }
-                    System.out.println("Received message from client: " + message);
+                    //System.out.println("Received message from client: " + message);
 
                     // Send the received message back to all connected clients
                     

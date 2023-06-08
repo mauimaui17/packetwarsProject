@@ -39,7 +39,7 @@ public class ChatThread {
             // For example, you can send it to other connected clients
 
             // Send a response back to the client
-            out.println("Received message: " + message);
+            out.println("Received message klsjd fl;asjdfasdf: " + message);
         }
 
         clientSocket.close();

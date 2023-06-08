@@ -161,7 +161,7 @@ public class GameStage {
     	chatText.setTranslateY(chatYOffsetBase - chatYOffset * chatYOffsetFac);
 		this.chatText.setText(messages.toString());
 
-        System.out.println("Received message from server: " + message);
+        //System.out.println("Received message from server: " + message);
         if(message.equals("/attack")) {
         	this.gametimer.spawnFishes(5);
         }

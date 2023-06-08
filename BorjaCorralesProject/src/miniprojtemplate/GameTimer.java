@@ -119,12 +119,12 @@ public class GameTimer extends AnimationTimer{
 	}
 
 	private void statusBar() {
-		this.gc.setFill(Color.WHITE);
+		this.gc.setFill(Color.BLACK);
 		this.gc.setFont(Font.font("Impact", 40));
 		this.gc.fillText("Money: " + this.myShip.getMoney(), 950, 35);
 		this.gc.drawImage(skull, 1200, 5);
 		this.gc.fillText(": " + this.myShip.getScore(), 1235, 35);
-		this.gc.drawImage(hp, 1500, 5);
+		this.gc.drawImage(hp, 1550, 5);
 		this.gc.fillText(": " + this.myShip.getStrength() +"/" + this.myShip.getMaxHealth(), 1600, 35);
 		this.gc.drawImage(clock, 1350, 5);
 		int totalTime = 300; // in seconds

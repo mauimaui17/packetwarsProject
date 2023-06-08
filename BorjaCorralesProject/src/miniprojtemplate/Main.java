@@ -9,7 +9,6 @@ public class Main extends Application {
 	}
 
 	public void start(Stage stage){
-
 		WelcomeScreen welcome = new WelcomeScreen();
 		welcome.setStageComponents(stage); //calls welcome screen
 	}
