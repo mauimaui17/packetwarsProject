@@ -16,7 +16,7 @@ public class Ship extends Sprite{
 	public final static int UPGRADE_HP_COST = 50;
 	public final static int UPGRADE_DMG_COST = 30;
 	private ArrayList<Bullet> bullets;
-	public final static Image SHIP_IMAGE = new Image("images/ship.png",70,Ship.SHIP_WIDTH,false,false);
+	public final static Image SHIP_IMAGE = new Image("images/thing.png",70,Ship.SHIP_WIDTH,false,false);
 	private final static int SHIP_WIDTH = 50;
 	private int score;
 	public final static long FIRE_RATE = 100000000L;
