@@ -78,9 +78,9 @@ public class GameTimer extends AnimationTimer{
 		this.respite = 5;
 		this.startTime = System.nanoTime();
 		//call the spawnFishes method
-		//this.spawnFishes(GameTimer.FIRST_FISHES);
+		this.spawnFishes(GameTimer.FIRST_FISHES);
 		//call method to handle mouse click event
-		//this.spawnFishes(5);
+		this.spawnFishes(5);
 		this.handleKeyPressEvent();
 
 		this.rect1 = new Rectangle(200, 150, 100, 800);
@@ -109,7 +109,7 @@ public class GameTimer extends AnimationTimer{
 			this.setGameOver(0);
 			this.gameOver();
 		}
-		if((seconds - TimeUnit.NANOSECONDS.toSeconds(this.startTime) == 120)&&
+		if((seconds - TimeUnit.NANOSECONDS.toSeconds(this.startTime) == 300)&&
 				this.myShip.isAlive()) {
 			this.setGameOver(1);
 			this.gameOver();
@@ -124,10 +124,10 @@ public class GameTimer extends AnimationTimer{
 		this.gc.fillText("Money: " + this.myShip.getMoney(), 950, 35);
 		this.gc.drawImage(skull, 1200, 5);
 		this.gc.fillText(": " + this.myShip.getScore(), 1235, 35);
-		this.gc.drawImage(hp, 1610, 5);
+		this.gc.drawImage(hp, 1500, 5);
 		this.gc.fillText(": " + this.myShip.getStrength() +"/" + this.myShip.getMaxHealth(), 1600, 35);
 		this.gc.drawImage(clock, 1350, 5);
-		int totalTime = 120; // in seconds
+		int totalTime = 300; // in seconds
 		long elapsedTime = seconds - startSec;
 		long remainingTime = totalTime - elapsedTime;
 		String formattedTime = String.format("%02d:%02d", remainingTime / 60, remainingTime % 60);

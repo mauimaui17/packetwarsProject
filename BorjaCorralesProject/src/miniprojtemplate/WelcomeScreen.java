@@ -42,37 +42,33 @@ public class WelcomeScreen {
 	public void setStageComponents(Stage stage){
 		this.vbox.setAlignment(Pos.CENTER);
 		this.vbox.setSpacing(10);
-		Text title = new Text("PACKET WARS");
+		Text title = new Text("PACKETWARS");
 		Button b1 = new Button ("New Game");
-		Button b2 = new Button ("Instructions");
-		Button b3 = new Button ("About");
 		Button b4 = new Button ("Exit");
 		this.textProp(title);
 		this.buttonProp(b1, stage);
-		this.buttonProp(b2, stage);
-		this.buttonProp(b3, stage);
 		this.buttonProp(b4, stage);
 
-		this.vbox.getChildren().addAll(title,b1, b2, b3, b4);
+		this.vbox.getChildren().addAll(title,b1, b4);
 		this.canvas.getGraphicsContext2D();
 
 		this.root.setBackground(this.bground);
 		this.root.getChildren().addAll(this.canvas,this.vbox);
 		stage.setScene(this.scene);
-		stage.setTitle("Mini Ship Shooting Game");
+		stage.setTitle("PACKETWARS");
 		stage.resizableProperty().setValue(Boolean.FALSE);
 		stage.show();
 	}
 	
 	private void textProp(Text t){
 		t.setFont(this.font40px);
-		t.setStyle("-fx-fill: #dc983a");
+		t.setStyle("-fx-fill: #32fa00");
 		t.setTextAlignment(TextAlignment.CENTER);
 	}
 	private void buttonProp(Button btn, Stage stage){
 		btn.setFont(this.font20px);
 		btn.setMaxSize(250,50);
-		btn.setStyle("-fx-border-color: #b78f62; -fx-border-width: 2px; -fx-background-color: transparent; -fx-text-fill: #dc983a");
+		btn.setStyle("-fx-border-color: #b78f62; -fx-border-width: 2px; -fx-background-color: transparent; -fx-text-fill: #32fa00");
 
 		btn.addEventHandler(MouseEvent.MOUSE_ENTERED, new EventHandler<MouseEvent>(){
 			@Override
@@ -86,7 +82,7 @@ public class WelcomeScreen {
 			@Override
 			public void handle(MouseEvent e){
 				System.out.println(btn.getText() + " Unhovered");
-				btn.setStyle("-fx-border-color: #b78f62; -fx-border-width: 2px; -fx-background-color: transparent; -fx-text-fill: #dc983a");
+				btn.setStyle("-fx-border-color: #b78f62; -fx-border-width: 2px; -fx-background-color: transparent; -fx-text-fill: #32fa00");
 			}
 		});
 
@@ -98,26 +94,6 @@ public class WelcomeScreen {
 					//TODO insert start game code
 					GameStage theGameStage = new GameStage();
 					theGameStage.setStage(stage);
-				}
-			});
-		} else if (btn.getText()=="About"){
-			btn.setOnMouseClicked(new EventHandler<MouseEvent>(){
-				@Override
-				public void handle(MouseEvent e){
-					btn.setDisable(true);
-					System.out.println(btn.getText());
-					About abt = new About();
-					abt.setStageComponents(stage);
-				}
-			});
-		} else if (btn.getText()=="Instructions"){
-			btn.setOnMouseClicked(new EventHandler<MouseEvent>(){
-				@Override
-				public void handle(MouseEvent e){
-					btn.setDisable(true);
-					System.out.println(btn.getText());
-					Instructions ins = new Instructions();
-					ins.setStageComponents(stage);
 				}
 			});
 		} else if (btn.getText()=="Exit"){
