@@ -59,7 +59,6 @@ public class ChatServer {
                         break;
                     }
                     System.out.println("Received message from client: " + message);
-                    clientWriter.println("Received message: " + message);
 
                     // Send the received message back to all connected clients
                     for (PrintWriter writer : clientWriters) {

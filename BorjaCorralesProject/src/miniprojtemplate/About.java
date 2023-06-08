@@ -29,7 +29,7 @@ public class About {
 	private StackPane root;
 
 	public About(){
-		this.bground = new Background(new BackgroundImage(new Image("images/spayce.gif",GameStage.WINDOW_WIDTH,GameStage.WINDOW_HEIGHT,false,false),BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,BackgroundSize.DEFAULT));
+//		this.bground = new Background(new BackgroundImage(new Image("images/spayce.gif",GameStage.WINDOW_WIDTH,GameStage.WINDOW_HEIGHT,false,false),BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,BackgroundSize.DEFAULT));
 		this.bp = new BorderPane();
 		this.canvas = new Canvas(GameStage.WINDOW_WIDTH, GameStage.WINDOW_HEIGHT);
 		this.font20px = Font.loadFont("file:resources/fonts/Starlord-Z8zJ.ttf", 20);
@@ -70,7 +70,7 @@ public class About {
 		BorderPane.setAlignment(create, Pos.CENTER);
 
 		this.root.getChildren().addAll(this.canvas,this.bp);
-		this.root.setBackground(this.bground);
+//		this.root.setBackground(this.bground);
 
 		stage.setScene(this.scene);
 		stage.setTitle("Mini Ship Shooting Game");

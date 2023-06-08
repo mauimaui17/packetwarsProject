@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.ArrayList;
 
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -36,26 +37,36 @@ public class GameStage {
 	private Canvas canvas;
 	private GraphicsContext gc;
 	private GameTimer gametimer;
-	private BackgroundImage bgimg = new BackgroundImage(new Image("images/spayce.gif",GameStage.WINDOW_WIDTH,GameStage.WINDOW_HEIGHT,false,false),BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT,
-			BackgroundPosition.DEFAULT,BackgroundSize.DEFAULT);
+//	private BackgroundImage bgimg = new BackgroundImage(new Image("images/spayce.gif",GameStage.WINDOW_WIDTH,GameStage.WINDOW_HEIGHT,false,false),BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT,
+//			BackgroundPosition.DEFAULT,BackgroundSize.DEFAULT);
     private Text chatText;
     private TextField chatInput;
     private Socket socket;
     private PrintWriter out;
     private BufferedReader in;
 	private GridPane overlay;
+	private ArrayList<String> chatHistory;
+	private int chatYOffsetBase = -50;
+	private int chatYOffset = 16;
+	private int chatYOffsetFac = 0;
+	private int chatHistoryCount = 0;
+	private int chatHistoryLimit = 15;
+	private String playerName;
 	//the class constructor
-	public GameStage() {
+	public GameStage(String ipAddress, String port, String playerName) {
 		this.root = new VBox();
 		this.scene = new Scene(root, GameStage.WINDOW_WIDTH,GameStage.WINDOW_HEIGHT,Color.CADETBLUE);
 		this.canvas = new Canvas(GameStage.WINDOW_WIDTH,GameStage.WINDOW_HEIGHT-100);
-		this.root.setBackground(new Background(this.bgimg));
+//		this.root.setBackground(new Background(this.bgimg));
 		this.gc = canvas.getGraphicsContext2D();
 		//instantiate an animation timer
         this.overlay = new GridPane();		
 		this.gametimer = new GameTimer(this.gc,this.scene,this.root);
+		this.chatHistory = new ArrayList<String>();
+		this.playerName = playerName;
+		System.out.println(ipAddress + " " + port);
         try {
-            socket = new Socket("0.0.0.0", 6000);
+            socket = new Socket(ipAddress, Integer.parseInt(port));
             out = new PrintWriter(socket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         } catch (IOException e) {
@@ -97,29 +108,28 @@ public class GameStage {
         GridPane.setConstraints(chatInput, 0, 0);
         root.getChildren().add(chatInput);
         this.chatText = new Text();
-        chatText.setTranslateX(800);
-        chatText.setTranslateY(800);
+        chatText.setTranslateX(50);
+        chatText.setTranslateY(-50);
         root.getChildren().add(chatText);
 	}
     private void processChatMessage(String message) {
-           this.chatText.setText("Chat: " + message);
-           if(message.equals("/attack")) {
-        	   if (this.gametimer.sendWave()) {
-        		   out.println(message);
-        	   } else {
-        		   out.println("Someone just tried to send out an attack! No money though.");
-        	   }
-           }
-           //read this, these functions called return strings. I want these to appear on the user's chat.
-           else if(message.equals("/repair")) {
-        	   this.gametimer.repairUpgrade();
-           } else if (message.equals("/hpup")) {
-        	   this.gametimer.upgradeHealth();
-           } else if (message.equals("/dmup")) {
-        	   this.gametimer.upgradeDamage();
-           } else {
-        	   out.println(message);
-           }
+		if(message.equals("/attack")) {
+		   if (this.gametimer.sendWave()) {
+			   out.println(message);
+		   } else {
+			   out.println("Someone just tried to send out an attack! No money though.");
+		   }
+		}
+		//read this, these functions called return strings. I want these to appear on the user's chat.
+		else if(message.equals("/repair")) {
+		   this.gametimer.repairUpgrade();
+		} else if (message.equals("/hpup")) {
+		   this.gametimer.upgradeHealth();
+		} else if (message.equals("/dmup")) {
+		   this.gametimer.upgradeDamage();
+		} else {
+		   out.println(playerName + ": " + message);
+		}
     }
     private class ReceiveHandler implements Runnable {
         @Override
@@ -136,6 +146,21 @@ public class GameStage {
         }
     }
     public void displayMessage(String message) {
+    	chatYOffsetFac = 0;
+    	this.chatHistory.add(message);
+    	if (this.chatHistory.size() > 15) this.chatHistory.remove(0);
+    	StringBuffer messages = new StringBuffer();
+    	chatHistoryCount = 0;
+    	this.chatHistory.forEach((msg) -> {
+    		if (chatHistoryCount <= chatHistoryLimit) {
+				messages.append(msg + "\n");
+				chatYOffsetFac += 1;
+    		}
+    		chatHistoryCount += 1;
+    	});
+    	chatText.setTranslateY(chatYOffsetBase - chatYOffset * chatYOffsetFac);
+		this.chatText.setText(messages.toString());
+
         System.out.println("Received message from server: " + message);
         if(message.equals("/attack")) {
         	this.gametimer.spawnFishes(5);

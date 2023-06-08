@@ -5,6 +5,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
@@ -12,6 +13,7 @@ import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
@@ -28,13 +30,20 @@ public class WelcomeScreen {
 	private Background bground;
 	private Font font20px;
 	private Font font40px;
+	private Image image;
+	private String name;
+	private String ipAddress;
+	private String port;
+	private TextField tfName;
+	private TextField tfIpAddress;
+	private TextField tfPort;
 
 	public WelcomeScreen(){
 		this.root = new StackPane();
 		this.scene = new Scene(root, GameStage.WINDOW_WIDTH, GameStage.WINDOW_HEIGHT);
 		this.vbox = new VBox();
 		this.canvas = new Canvas(GameStage.WINDOW_WIDTH, GameStage.WINDOW_HEIGHT);
-		this.bground = new Background(new BackgroundImage(new Image("images/spayce.gif",GameStage.WINDOW_WIDTH,GameStage.WINDOW_HEIGHT,false,false),BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,BackgroundSize.DEFAULT));
+//		this.bground = new Background(new BackgroundImage(new Image("/images/spayce.gif",GameStage.WINDOW_WIDTH,GameStage.WINDOW_HEIGHT,false,false),BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,BackgroundSize.DEFAULT));
 		this.font20px = Font.loadFont("file:resources/fonts/Starlord-Z8zJ.ttf", 20);
 		this.font40px = Font.loadFont("file:resources/fonts/Starlord-Z8zJ.ttf", 40);
 	}
@@ -43,6 +52,21 @@ public class WelcomeScreen {
 		this.vbox.setAlignment(Pos.CENTER);
 		this.vbox.setSpacing(10);
 		Text title = new Text("PACKET WARS");
+		Text tName = new Text("Username");
+		tfName = new TextField();
+		HBox hName = new HBox(tfName);
+		Text tIpAddress = new Text("IP ADDRESS");
+		Text tPort = new Text("PORT");
+		HBox hTextIpPort = new HBox(tIpAddress, tPort);
+		tfIpAddress = new TextField();
+		tfIpAddress.maxWidth(5);
+		tfPort = new TextField();
+		tfPort.maxWidth(5);
+		HBox hIpAddress = new HBox(tfIpAddress,tfPort);
+		hIpAddress.setTranslateX(GameStage.WINDOW_WIDTH/2 - 150);
+		hTextIpPort.setTranslateX(GameStage.WINDOW_WIDTH/2 -100);
+		hTextIpPort.setSpacing(100);
+		hName.setTranslateX(GameStage.WINDOW_WIDTH/2 - 150);
 		Button b1 = new Button ("New Game");
 		Button b2 = new Button ("Instructions");
 		Button b3 = new Button ("About");
@@ -53,10 +77,10 @@ public class WelcomeScreen {
 		this.buttonProp(b3, stage);
 		this.buttonProp(b4, stage);
 
-		this.vbox.getChildren().addAll(title,b1, b2, b3, b4);
+		this.vbox.getChildren().addAll(title,tName, hName, hTextIpPort,hIpAddress,b1, b2, b3, b4);
 		this.canvas.getGraphicsContext2D();
 
-		this.root.setBackground(this.bground);
+//		this.root.setBackground(this.bground);
 		this.root.getChildren().addAll(this.canvas,this.vbox);
 		stage.setScene(this.scene);
 		stage.setTitle("Mini Ship Shooting Game");
@@ -96,7 +120,10 @@ public class WelcomeScreen {
 				public void handle(MouseEvent e){
 					System.out.println(btn.getText());
 					//TODO insert start game code
-					GameStage theGameStage = new GameStage();
+					ipAddress = tfIpAddress.getText();
+					port = tfPort.getText();
+					name = tfName.getText();
+					GameStage theGameStage = new GameStage(ipAddress, port, name);
 					theGameStage.setStage(stage);
 				}
 			});

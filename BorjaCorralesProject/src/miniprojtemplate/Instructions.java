@@ -34,7 +34,7 @@ public class Instructions {
 	private int pageNum;
 
 	public Instructions(){
-		this.bground = new Background(new BackgroundImage(new Image("images/spayce.gif",GameStage.WINDOW_WIDTH,GameStage.WINDOW_HEIGHT,false,false),BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,BackgroundSize.DEFAULT));
+//		this.bground = new Background(new BackgroundImage(new Image("images/spayce.gif",GameStage.WINDOW_WIDTH,GameStage.WINDOW_HEIGHT,false,false),BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,BackgroundSize.DEFAULT));
 		this.bp = new BorderPane();
 		this.canvas = new Canvas(GameStage.WINDOW_WIDTH, GameStage.WINDOW_HEIGHT);
 		this.buttons = new FlowPane();
@@ -66,7 +66,7 @@ public class Instructions {
 
 		this.bp.setCenter(this.vbox);
 		this.root.getChildren().addAll(this.canvas,this.bp);
-		this.root.setBackground(this.bground);
+//		this.root.setBackground(this.bground);
 		stage.setScene(this.scene);
 		stage.setTitle("Mini Ship Shooting Game");
 		stage.resizableProperty().setValue(Boolean.FALSE);

@@ -29,7 +29,7 @@ public class GameWin {
 	private int score;
 	private boolean boss_kill;
 	public GameWin(int score, boolean boss_kill){
-		this.bground = new Background(new BackgroundImage(new Image("images/spayce.gif",GameStage.WINDOW_WIDTH,GameStage.WINDOW_HEIGHT,false,false),BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,BackgroundSize.DEFAULT));
+//		this.bground = new Background(new BackgroundImage(new Image("images/spayce.gif",GameStage.WINDOW_WIDTH,GameStage.WINDOW_HEIGHT,false,false),BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,BackgroundSize.DEFAULT));
 		this.canvas = new Canvas(GameStage.WINDOW_WIDTH, GameStage.WINDOW_HEIGHT);
 		this.font20px = Font.loadFont("file:resources/fonts/Starlord-Z8zJ.ttf", 20);
 		this.root = new StackPane();
@@ -63,7 +63,7 @@ public class GameWin {
 		this.vbox.getChildren().addAll(text,text2,text3, b1, b2);
 		this.canvas.getGraphicsContext2D();
 		this.root.getChildren().addAll(this.canvas,this.vbox);
-		this.root.setBackground(this.bground);
+//		this.root.setBackground(this.bground);
 		stage.setScene(this.scene);
 		stage.setTitle("Mini Ship Shooting Game");
 		stage.resizableProperty().setValue(Boolean.FALSE);
